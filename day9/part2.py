@@ -1,8 +1,5 @@
-""" Far too slow, not sure if it works """
-
-
 from collections import defaultdict
-from itertools import combinations
+from itertools import combinations, pairwise
 
 
 def get_area(pair):
@@ -10,7 +7,7 @@ def get_area(pair):
     return (abs(x1 - x2) + 1) * (abs(y1 - y2) + 1)
 
 
-with open("input.txt", "rt") as f:
+with open("ex.txt", "rt") as f:
     red = [tuple(map(int, row.strip().split(","))) for row in f]
 
 border = set()
@@ -28,7 +25,6 @@ for current in red[1:] + [red[0]]:
         max_y = max(current[1], last[1])
         for y in range(min_y+1, max_y):
             border.add((current[0], y))
-
             border_x[current[0]].append(y)
             border_y[y].append(current[0])
     elif current[1] == last[1]:
@@ -36,7 +32,6 @@ for current in red[1:] + [red[0]]:
         max_x = max(current[0], last[0])
         for x in range(min_x+1, max_x):
             border.add((x, current[1]))
-
             border_x[x].append(current[1])
             border_y[current[1]].append(x)
 
@@ -44,10 +39,15 @@ for current in red[1:] + [red[0]]:
 
 [border_x[x].sort() for x in border_x]
 [border_y[y].sort() for y in border_y]
-
 red_or_green = border.copy()
 
+for x, y in border_x.items():
+    print("X=", x)
+    for y1, y2 in pairwise(y):
+        print(y1, y2)
+        #red_or_green.union(range(y1, y2))
 
+"""
 def is_in(x_tile, y_tile):
     y2 = next((y for y in border_x[x_tile] if y > y_tile), None)
     if y2 is None or y2 == border_x[x_tile][0]:
@@ -100,3 +100,4 @@ for pair in options:
         break
 
 print(answer)
+"""
